@@ -9,28 +9,23 @@ import java.util.Set;
 @Entity
 @Table(name = "roles")
 public class Role implements GrantedAuthority {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-
-    @Column(name = "name")
-    private String name;
-
+    @Column(name = "role")
+    private String role;
+    @Transient
     @ManyToMany(mappedBy = "roles")
     private Set<User> users;
 
     public Role() {
     }
 
-    public Role(Long id) {
+    public Role(Long id, String role, Set<User> users) {
         this.id = id;
-    }
-
-    public Role(Long id, String name) {
-        this.id = id;
-        this.name = name;
+        this.role = role;
+        this.users = users;
     }
 
     public Long getId() {
@@ -41,17 +36,12 @@ public class Role implements GrantedAuthority {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getRole() {
+        return role;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public String getAuthority() {
-        return getName();
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public Set<User> getUsers() {
@@ -60,5 +50,27 @@ public class Role implements GrantedAuthority {
 
     public void setUsers(Set<User> users) {
         this.users = users;
+    }
+
+    public Role(Long id, String role) {
+        this.id = id;
+        this.role = role;
+    }
+
+    public Role(Long id) {
+        this.id = id;
+    }
+
+    @Override
+    public String getAuthority() {
+        System.out.println(role);
+        return role;
+    }
+
+
+
+    @Override
+    public String toString() {
+        return this.role;
     }
 }

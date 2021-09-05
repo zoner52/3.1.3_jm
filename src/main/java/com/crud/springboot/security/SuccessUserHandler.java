@@ -15,28 +15,21 @@ import java.io.IOException;
 import java.util.Set;
 
 @Component
-public class LoginSuccessHandler implements AuthenticationSuccessHandler {
-
-    private UserService userService;
-
-    @Autowired
-    public LoginSuccessHandler(UserService userService) {
-        this.userService = userService;
-    }
-
-    public LoginSuccessHandler() {
-    }
-
+public class SuccessUserHandler implements AuthenticationSuccessHandler {
+    // Spring Security использует объект Authentication, пользователя авторизованной сессии.
     @Override
     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest,
                                         HttpServletResponse httpServletResponse,
-                                        Authentication authentication) throws IOException, ServletException {
+                                        Authentication authentication) throws IOException {
         Set<String> roles = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
-        User user = userService.getUserByName(authentication.getName());
         if (roles.contains("ROLE_ADMIN")) {
-            httpServletResponse.sendRedirect("/admin");
-        } else if (roles.contains("ROLE_USER")) {
-            httpServletResponse.sendRedirect("/users/" + user.getId());
+            httpServletResponse.sendRedirect("/admin/userList");
+        }
+        else if (roles.contains("ROLE_USER")) {
+            httpServletResponse.sendRedirect("/user/userInfo");
+        }
+        else {
+            httpServletResponse.sendRedirect("/");
         }
     }
 }
